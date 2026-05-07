@@ -119,7 +119,7 @@ var BlueComboQfound = false;
 var JailQfound = false;
  
 
- //<-- Randomization KeyPlacement functions Ai/google help -->
+ //Randomization KeyPlacement functions Ai/StackOverflow/Myself mix -->
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -143,7 +143,7 @@ function BlueKeyRandomizer() {
         if (chosen) chosen.style.visibility = "visible";
     }
 }
-//<-- Randomization KeyPlacement functions Ai help -->
+//<-- Randomization KeyPlacement functions Ai/StackOverflow/Myself mix -->
 
 
 function RedKeyRandomizer() {
@@ -161,7 +161,7 @@ function RedKeyRandomizer() {
     }
 }
 
-//<-- Randomization KeyPlacement functions Ai/google help -->
+//<-- Randomization KeyPlacement functions Ai/StackOverflow/Myself mix -->
 // Ensure at least one key is in the jail and that jail key is visible from the start
 function enforceJailPresence() {
     // Ensure keys do not spawn in the same place
@@ -201,7 +201,7 @@ function enforceJailPresence() {
         if (jailEl) jailEl.style.visibility = "visible";
     }
 }
-//<-- Randomization KeyPlacement functions Ai/google help
+//<-- Randomization KeyPlacement functions Ai/StackOverflow/Myself mix
 
 function pickUpBlueKey(id) {
     const el = document.getElementById(id);
@@ -343,7 +343,7 @@ function inspectCrack() { //checks if the crack is visible and that you have to 
         holevisible = true;
         document.getElementById("Crack").style.visibility = "hidden";
         document.getElementById("Hole").style.visibility = "visible";
-//Randomization KeyPlacement functions Ai/google help -->
+//Randomization KeyPlacement functions Ai/StackOverflow/Myself mix -->
         if (blueKeyLocation === 'BlueKeyHole') {
             const b = document.getElementById('BlueKeyHole');
             if (b) b.style.visibility = "visible";
@@ -352,7 +352,7 @@ function inspectCrack() { //checks if the crack is visible and that you have to 
         if (redKeyLocation === 'RedKeyHole') {
             const r = document.getElementById('RedKeyHole');
             if (r) r.style.visibility = "visible";
- //<-- Randomization KeyPlacement functions Ai/google help
+ //<-- Randomization KeyPlacement functions Ai/StackOverflow/Myself mix
         }
     } else {
         alert("There seems to be a crack in the wall, but it looks too small to fit through. Maybe you can find something to break through it?");
@@ -422,14 +422,14 @@ function inspectComputer() { //Checks if the computer is visible and it hasn't a
             alert("You inspect the secret room but find nothing of interest.");
         }
         NotesList();
- //<-- Randomization KeyPlacement functions Ai/google help
+ //Randomization KeyPlacement functions Ai/StackOverflow/Myself mix -->
             if (redKeyLocation && redKeyLocation !== 'RedKeyJail') {
                 const el = document.getElementById(redKeyLocation);
                 // only reveal non-hole red key when secret room opens; if red key is in the hole, wait until hole is revealed
                 if (el && redKeyLocation !== 'RedKeyHole') el.style.visibility = "visible";
                 if (el && redKeyLocation === 'RedKeyHole' && holevisible) el.style.visibility = "visible";
             }
-//<-- Randomization KeyPlacement functions Ai/google help
+//<-- Randomization KeyPlacement functions Ai/StackOverflow/Myself mix
             computerused = true;
         } else {
             alert("Incorrect password. Maybe you can find a hint somewhere in the room.");
@@ -517,7 +517,7 @@ function inspectPlant() { //if a note is in the plant location it updates the us
     NotesList();
 }
 
-//Randomization NotePlacement functions Ai/google help -->
+//Randomization NotePlacement functions Ai/StackOverflow/Myself mix -->
 var notePlacement = {}; // maps spot -> question variable name
 var noteTexts = {
     'ComputerQuestion': ComputerQuestion,
@@ -563,7 +563,7 @@ function placeNotesRandomizer() {
     }
 
 }
-//<-- Randomization NotePlacement functions Ai/google help
+//<-- Randomization NotePlacement functions Ai/StackOverflow/Myself mix
 function inspectHole() { //if holle  is visible and note is placed there it updates the table and user
     if (!holevisible) {
         alert("The hole is not accessible yet.");
