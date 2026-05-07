@@ -1,0 +1,623 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Escape Room</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!--title and table for note questions-->
+    <h1>Escape Room</h1>
+<div id="room">
+    <div id="tableArea">
+    <table>
+                <tr>
+                    <td>
+                <h1 id="NoteTitle">Notes/Keys</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <h3 id="CompNote">Computer Question</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <h3 id="ComboNote">Combo Lock Question</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <h3 id="GreenComboNote">Green Combo Lock Question</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <h3 id="BlueComboNote">Blue Combo Lock Question</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <h3 id="JailNote">Jail Question</h3>
+                    </td>
+                </tr>
+            
+    </table>
+    
+    <div id="circleBlue" class="circleBlue"></div>
+    <div id="circleRed" class="circleRed"></div>
+    </div>
+
+    <img id="door" src="Escaperoom_Tempt_Door.png" alt="Door" onclick="tryDoor()">
+    <img id="ComboLock" src="ComboLock_Demo.png" alt="ComboLock" onclick="tryComboLock()">
+    <img id="GreenComboLock" src="GreenComboLock_Demo.png" alt="Green Combo Lock" onclick="tryGreenComboLock()">
+    <img id="BlueComboLock" src="BlueComboLock_Demo.png" alt="Blue Combo Lock" onclick="tryBlueComboLock()">
+    <img id="DoorKnob" src="DoorKnob_Demo.png" alt="Key Lock" onclick="tryKeyLock()">
+    <img id="SecretRoom" src="Secret Room_Demo.png" alt="Secret Room" onclick="inspectSecretRoom()">
+    <img id="Crack" src="Crack_Demo.png" alt="Crack" onclick="inspectCrack()">
+    <img id="Hole" src="Hole_Demo.png" alt="Hole" onclick="inspectHole()">
+    <img id="LockBox" src="LockBox_Demo.png" alt="Lock Box" onclick="inspectLockBox()">
+    <img id="lockBoxOpen" src="LockBoxOpen_Demo.png" alt="Lock Box Open" onclick="inspectLockBox()">
+    <img id="BlueKeyHole" src="BlueKey_demo_Hole.png" alt="Blue Key Hole" onclick="pickUpBlueKey(this.id)">
+    <img id="BlueKeyLockBox" src="BlueKey_demo_LockBox.png" alt="Blue Key Lock Box" onclick="pickUpBlueKey(this.id)">
+    <img id="BlueKeyJail" src="JailBlueKey_demo (2).png" alt="Blue Key Jail" onclick="pickUpBlueKey(this.id)">
+    <img id="JailOpen" src="JailOpen_Demo.png" alt="Jail Open" onclick="inspectJail()">
+    <img id="SecretRedKey" src="SecretRedKey_Demo.png" alt="Secret Red Key" onclick="pickUpRedKey(this.id)">
+    <img id="RedKeyHole" src="HoleRedKey_Demo.png" alt="Red Key Hole" onclick="pickUpRedKey(this.id)">
+    <img id="RedKeyJail" src="JailRedKey_demo (1).png" alt="Red Key Jail" onclick="pickUpRedKey(this.id)">
+    <img id="Carpet" src="Carpet_Demo.png" alt="Carpet" onclick="inspectCarpet()">
+    <img id="Paintings" src="Painting_Demo.png" alt="Painting" onclick="inspectPaintings()">
+    <img id="Computer" src="Computer_Demo.png" alt="Computer" onclick="inspectComputer()"> 
+    <img id="Pickaxe" src="Pickaxe_Demo.png" alt="Pickaxe" onclick="inspectPickaxe()">
+    <img id="Plant" src="Plant_Demo.png" alt="Plant" onclick="inspectPlant()">
+
+</div>
+<button id="escape" onclick="window.location.href='escaped.html'">"Get out of Here!"</button>
+
+ 
+
+
+<script>
+    //all of my variables
+    const min = 1;
+    const max = 4;
+ var blueKeyLocation = null;
+ var redKeyLocation = null;
+ var hasBlueKey = false;
+ var hasRedKey = false;
+ var hasPickaxe = false;
+ var comboLock = false;
+ var keyLock = false;
+ var computerused = false;
+ var plantinspected = false;
+ var ComputerQuestion = "CompQ"; //Eric question here
+ var ComputerAnswer = "B"; //Eric answer here
+ var ComboLockQuestion = "ComboQ"; //Eric question here
+ var ComboLockAnswer = "D"; //Eric answer here
+ var GreenComboLockQuestion = "GreenQ"; //Eric question here
+ var GreenComboLockAnswer = "F"; //Eric answer here
+ var greencombolock = false;
+ var BlueComboLockQuestion = "BlueQ"; //Eric question here
+ var BlueComboLockAnswer = "H"; //Eric answer here
+ var bluecombolock = false;
+ var JailQuestion = "JailQ"; //Eric question here
+ var JailAnswer = "J"; //Eric answer here
+ var paintingVisible = true;
+ var computerVisible = false;
+ var secretRoomVisible = false;
+ var crackVisible = true;
+ var holevisible = false;
+var holeInspected = false;
+var CompQfound = false;
+var ComboQfound = false;
+var GreenComboQfound = false;
+var BlueComboQfound = false;
+var JailQfound = false;
+ 
+
+ //<-- Randomization KeyPlacement functions Ai/google help -->
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function BlueKeyRandomizer() {
+    const choices = ['BlueKeyHole','BlueKeyLockBox','BlueKeyJail']; //location key can appear
+    choices.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.visibility = "hidden";
+    });
+    const idx = getRandomInt(0, choices.length - 1);//randomly picks one of the locations
+    blueKeyLocation = choices[idx];
+    
+    if (blueKeyLocation === 'BlueKeyHole') {
+
+    } else if (blueKeyLocation === 'BlueKeyLockBox') {
+        // remain hidden until lockbox opened with red key
+    } else if (blueKeyLocation === 'BlueKeyJail') {
+        // require jail answer to pick up
+        const chosen = document.getElementById(blueKeyLocation);
+        if (chosen) chosen.style.visibility = "visible";
+    }
+}
+//<-- Randomization KeyPlacement functions Ai help -->
+
+
+function RedKeyRandomizer() {
+    const choices = ['SecretRedKey','RedKeyHole','RedKeyJail']; //location key can appear
+    choices.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.visibility = "hidden";
+    });
+    const idx = getRandomInt(0, choices.length - 1);//randomly picks one of the locations
+    redKeyLocation = choices[idx];
+    // If red key is placed in jail show it (requires password to pick up).
+    if (redKeyLocation === 'RedKeyJail') {
+        const el = document.getElementById('RedKeyJail');
+        if (el) el.style.visibility = "visible";
+    }
+}
+
+//<-- Randomization KeyPlacement functions Ai/google help -->
+// Ensure at least one key is in the jail and that jail key is visible from the start
+function enforceJailPresence() {
+    // Ensure keys do not spawn in the same place
+    function spotFor(loc) {
+        if (!loc) return null;
+        if (loc.includes('Hole')) return 'Hole';
+        if (loc.includes('Jail')) return 'Jail';
+        if (loc.includes('LockBox')) return 'LockBox';
+        if (loc.includes('Secret')) return 'Secret';
+        return loc;
+    }
+    // If both ended up in the same spot, re-roll red until different
+    while (spotFor(blueKeyLocation) && spotFor(redKeyLocation) && spotFor(blueKeyLocation) === spotFor(redKeyLocation)) {
+        
+        if (redKeyLocation) {
+            const prev = document.getElementById(redKeyLocation);
+            if (prev) prev.style.visibility = "hidden";
+        }
+        // pick a new red location
+        const redChoices = ['SecretRedKey','RedKeyHole','RedKeyJail'];
+        redKeyLocation = redChoices[getRandomInt(0, redChoices.length - 1)];
+        if (redKeyLocation === 'RedKeyJail') {
+            const el = document.getElementById('RedKeyJail');
+            if (el) el.style.visibility = "visible";
+        }
+    }
+    //one key is accessible from the start: if neither is in jail, make red visible in jail
+    const blueInJail = blueKeyLocation === 'BlueKeyJail';
+    const redInJail = redKeyLocation === 'RedKeyJail';
+    if (!blueInJail && !redInJail) {
+        if (redKeyLocation) {
+            const prev = document.getElementById(redKeyLocation);
+            if (prev) prev.style.visibility = "hidden";
+        }
+        redKeyLocation = 'RedKeyJail';
+        const jailEl = document.getElementById('RedKeyJail');
+        if (jailEl) jailEl.style.visibility = "visible";
+    }
+}
+//<-- Randomization KeyPlacement functions Ai/google help
+
+function pickUpBlueKey(id) {
+    const el = document.getElementById(id);
+    
+    if (id.includes('Jail')) { //if the blue key is is the jail it requires a code to get it
+        const tryAns = prompt('Enter the password to retrieve the blue key:');
+        if (tryAns !== JailAnswer) {
+            alert('Incorrect password. You cannot take the key.');
+            return;
+        } if (tryAns === JailAnswer) {
+            alert('You entered the correct password! You can take the key.');
+            document.getElementById("JailOpen").style.visibility = "visible";
+            document.getElementById("BlueKeyJail").style.visibility = "hidden";
+            document.getElementById("circleBlue").style.backgroundColor = "blue";
+        }
+    }
+    alert("You picked up the blue key. Maybe it can open something in the room."); //displays the key has been picked up and changes style and visiblity as necessary
+    hasBlueKey = true;
+    el.style.visibility = "hidden";
+    document.getElementById("JailOpen").style.visibility = "visible";
+    document.getElementById("circleBlue").style.backgroundColor = "blue";
+}
+
+function pickUpRedKey(id) {
+    const el = document.getElementById(id);
+    
+    if (id.includes('Jail')) { //if the blue key is is the jail it requires a code to get it
+        const tryAns = prompt('Enter the password to retrieve the red key:');
+        if (tryAns !== JailAnswer) {
+            alert('Incorrect password. You cannot take the key.');
+            return;
+        } if (tryAns === JailAnswer) {
+            alert('You entered the correct password! You can take the key.');
+            document.getElementById("JailOpen").style.visibility = "visible";
+            document.getElementById("RedKeyJail").style.visibility = "hidden";
+            document.getElementById("circleRed").style.backgroundColor = "red";
+        }
+    }
+    alert("You picked up the red key. Maybe it can open something in the room."); //displays the key has been picked up and changes style and visiblity as necessary
+    hasRedKey = true;
+    document.getElementById("circleRed").style.backgroundColor = "red";
+    el.style.visibility = "hidden";
+    
+}
+    
+
+window.addEventListener('load', () => { //when the page is loaded these functions run
+    BlueKeyRandomizer();
+    RedKeyRandomizer();
+    enforceJailPresence();
+    placeNotesRandomizer();
+    NotesList();
+});
+
+
+function tryDoor() { //
+     if (comboLock == true && keyLock == true && greencombolock == true && bluecombolock == true) { //makes sure all locks have been opened before allowing you to exit
+        document.getElementById("escape").style.visibility = "visible";
+    }
+    else {
+         alert("The door is locked. You need to find a way to open it.");
+    }
+}
+function tryKeyLock() { //checks that you have the blue key to unlock the keylock
+    if (hasBlueKey == true) {
+        alert("You used the blue key to open the key lock, and throw the key in the trash!");
+        keyLock = true;
+    } else {
+        alert("The key lock is locked. You need to find a key to open it.");
+    }
+}
+function tryComboLock() { //makes sure the code put in is correct and unlocks if it's correct
+    varComboTry = prompt("Enter the combination to open the combo lock:"); //Eric question here
+    if (varComboTry == ComboLockAnswer) { //Eric Answer here
+        comboLock = true;
+    }
+    if (comboLock == true) {
+        alert("You opened the combo lock! You throw it on the floor.");
+        document.getElementById("ComboLock").style.visibility = "hidden";
+    } else {
+    alert("The combo lock is locked. You need to find the correct combination to open it.");
+}
+}
+function tryGreenComboLock() { //makes sure the code put in is correct and unlocks if it's correct
+    var greenComboTry = prompt("Enter the combination to open the green combo lock:"); //Eric question here
+    if (greenComboTry == GreenComboLockAnswer) { //Eric Answer here
+        alert("You opened the green combo lock! You throw it on the floor.");
+        document.getElementById("GreenComboLock").style.visibility = "hidden";
+        greencombolock = true;
+    } else {
+    alert("The green combo lock is locked. You need to find the correct combination to open it.");
+}
+}
+function tryBlueComboLock() { //makes sure the code put in is correct and unlocks if it's correct
+    var blueComboTry = prompt("Enter the combination to open the blue combo lock:"); //Eric question here
+    if (blueComboTry == BlueComboLockAnswer) { //Eric Answer here
+        alert("You opened the blue combo lock! You throw it on the floor.");
+        document.getElementById("BlueComboLock").style.visibility = "hidden";
+        bluecombolock = true;
+    } else {
+    alert("The blue combo lock is locked. You need to find the correct combination to open it.");
+}
+}
+function inspectCarpet() { //checks if one of the notes were placed under the carpet. depending on the note found it will display it in the table and change its found value to true
+    const spot = 'Carpet';
+    
+    if (notePlacement[spot] === 'ComputerQuestion') {
+        CompQfound = true;
+        const el = document.getElementById("CompNote"); if (el) el.style.visibility = "visible";
+    } else if (notePlacement[spot] === 'ComboLockQuestion') {
+        ComboQfound = true;
+        const el = document.getElementById("ComboNote"); if (el) el.style.visibility = "visible";
+    } else if (notePlacement[spot] === 'GreenComboLockQuestion') {
+        GreenComboQfound = true;
+        const el = document.getElementById("GreenComboNote"); if (el) el.style.visibility = "visible";
+    } else if (notePlacement[spot] === 'BlueComboLockQuestion') {
+        BlueComboQfound = true;
+        const el = document.getElementById("BlueComboNote"); if (el) el.style.visibility = "visible";
+    } else if (notePlacement[spot] === 'JailQuestion') {
+        JailQfound = true;
+        const el = document.getElementById("JailNote"); if (el) el.style.visibility = "visible";
+    }
+
+    if (notePlacement[spot]) {
+        alert("You see a lifted corner on the carpet. You lift it up and find a note with the sentence " + noteTexts[notePlacement[spot]] + " I wonder what it means?");
+
+    } else {
+        alert("You see a lifted corner on the carpet but nothing else.");
+    }
+    NotesList();
+}
+
+function inspectCrack() { //checks if the crack is visible and that you have to pickaxe. If a key was placed in the hole location it displays it.
+    if (crackVisible == true && hasPickaxe == true) {
+        const spot = 'Crack';
+        alert("You see a crack in the wall. You break through it with your pickaxe.");
+        
+        crackVisible = false;
+        holevisible = true;
+        document.getElementById("Crack").style.visibility = "hidden";
+        document.getElementById("Hole").style.visibility = "visible";
+//Randomization KeyPlacement functions Ai/google help -->
+        if (blueKeyLocation === 'BlueKeyHole') {
+            const b = document.getElementById('BlueKeyHole');
+            if (b) b.style.visibility = "visible";
+        }
+    
+        if (redKeyLocation === 'RedKeyHole') {
+            const r = document.getElementById('RedKeyHole');
+            if (r) r.style.visibility = "visible";
+ //<-- Randomization KeyPlacement functions Ai/google help
+        }
+    } else {
+        alert("There seems to be a crack in the wall, but it looks too small to fit through. Maybe you can find something to break through it?");
+    }
+    NotesList();
+}
+function inspectPaintings() { //checks if one of the notes were placed behind the painting. depending on the note found it will display it in the table and change its found value to true
+    const spot = 'Paintings';
+     if (notePlacement[spot]) {
+        alert("You see a painting on the wall. You see a gap between it and the wall... You tear through it and find a computer and a note with the sentence " + noteTexts[notePlacement[spot]]);
+     } else {
+        alert("You see a painting on the wall. You see a gap between it and the wall... You tear through it and find a computer!");
+     }
+    paintingVisible = false;
+    computerVisible = true;
+    document.getElementById("Paintings").style.visibility = "hidden";
+    document.getElementById("Computer").style.visibility = "visible";//makes the computer visible
+
+    // If a note was placed behind the painting, mark it found now
+    if (notePlacement[spot]) {
+        const found = notePlacement[spot];
+        if (found === 'ComputerQuestion') {
+            CompQfound = true;
+        } else if (found === 'ComboLockQuestion') {
+            ComboQfound = true;
+        } else if (found === 'GreenComboLockQuestion') {
+            GreenComboQfound = true;
+        } else if (found === 'BlueComboLockQuestion') {
+            BlueComboQfound = true;
+        } else if (found === 'JailQuestion') {
+            JailQfound = true;
+        }
+    }
+    NotesList();
+}
+function inspectComputer() { //Checks if the computer is visible and it hasn't already been used, then asks for the correct code and if it is correct then it reveals the secret room. If a note is placed in the secret room position it updates the table and shows it to the user
+    if (computerVisible == true) {
+        if (computerused == true) {
+            alert("Nothing new to see here."); 
+        } else {
+        var computerTry = prompt("You see a computer with a text box. I wonder what you should type in it?"); 
+        if (computerTry == ComputerAnswer) {
+            alert("The building begins to shake. You see a hidden door open up in the wall.");
+            secretRoomVisible = true;
+            document.getElementById("Pickaxe").style.visibility = "visible";
+            document.getElementById("SecretRoom").style.visibility = "visible";
+            const spot = 'SecretRoom';
+        if (!secretRoomVisible) {
+            alert("There is no secret room open right now.");
+            return;
+        }
+        if (notePlacement[spot]) {
+            alert("You inspect the secret room and find a note that says " + noteTexts[notePlacement[spot]] + " I wonder what it means?");
+            const found = notePlacement[spot];
+            if (found === 'ComputerQuestion') {
+                CompQfound = true;
+            } else if (found === 'ComboLockQuestion') {
+                ComboQfound = true;
+            } else if (found === 'GreenComboLockQuestion') {
+                GreenComboQfound = true;
+            } else if (found === 'BlueComboLockQuestion') {
+                BlueComboQfound = true;
+            } else if (found === 'JailQuestion') {
+                JailQfound = true;
+            }
+        } else {
+            alert("You inspect the secret room but find nothing of interest.");
+        }
+        NotesList();
+ //<-- Randomization KeyPlacement functions Ai/google help
+            if (redKeyLocation && redKeyLocation !== 'RedKeyJail') {
+                const el = document.getElementById(redKeyLocation);
+                // only reveal non-hole red key when secret room opens; if red key is in the hole, wait until hole is revealed
+                if (el && redKeyLocation !== 'RedKeyHole') el.style.visibility = "visible";
+                if (el && redKeyLocation === 'RedKeyHole' && holevisible) el.style.visibility = "visible";
+            }
+//<-- Randomization KeyPlacement functions Ai/google help
+            computerused = true;
+        } else {
+            alert("Incorrect password. Maybe you can find a hint somewhere in the room.");
+        }
+    }
+}
+}
+
+    
+
+function inspectPickaxe() {// if the secret room is visible and pickaxe is clicked it is hidden and haspickaxe value = true
+    if (secretRoomVisible == true) {
+        alert("You picked up the pickaxe. Maybe it can break something in the room.");
+            hasPickaxe = true;
+        document.getElementById("Pickaxe").style.visibility = "hidden";
+    }
+}
+function inspectLockBox() { //if you have the red key the box opens, if a note is placed there it updates the table and user, and if the blue key is placed there it displays it
+        if (hasRedKey == true) {
+        alert("You used the red key to open the lock box, and throw the key in the trash!");
+        document.getElementById("lockBoxOpen").style.visibility = "visible";
+        document.getElementById("LockBox").style.visibility = "hidden";
+        
+        if (notePlacement['LockBox']) {
+            alert("Inside the lock box, you find a note that says " + noteTexts[notePlacement['LockBox']] + " I wonder what it means?");
+        }
+        if (notePlacement['LockBox']) {
+            if (notePlacement['LockBox'] === 'ComputerQuestion') {
+                CompQfound = true;
+                const el = document.getElementById("CompNote"); if (el) el.style.visibility = "visible";
+            } else if (notePlacement['LockBox'] === 'ComboLockQuestion') {
+                ComboQfound = true;
+                const el = document.getElementById("ComboNote"); if (el) el.style.visibility = "visible";
+            } else if (notePlacement['LockBox'] === 'GreenComboLockQuestion') {
+                GreenComboQfound = true;
+                const el = document.getElementById("GreenComboNote"); if (el) el.style.visibility = "visible";
+            } else if (notePlacement['LockBox'] === 'BlueComboLockQuestion') {
+                BlueComboQfound = true;
+                const el = document.getElementById("BlueComboNote"); if (el) el.style.visibility = "visible";
+            } else if (notePlacement['LockBox'] === 'JailQuestion') {
+                JailQfound = true;
+                const el = document.getElementById("JailNote"); if (el) el.style.visibility = "visible";
+            }
+        }
+
+        if (blueKeyLocation === 'BlueKeyLockBox') {
+            const b = document.getElementById('BlueKeyLockBox');
+            if (b) b.style.visibility = "visible";
+        }
+    } else {
+        alert("The lock box is locked. You need to find a key to open it.");
+    }
+    NotesList();
+}
+function inspectPlant() { //if a note is in the plant location it updates the user and table
+    const spot = 'Plant';
+    if (plantinspected == false) {
+        if (notePlacement[spot]) {
+            alert("You see a plant in the corner. You inspect it and find a note with the sentence " + noteTexts[notePlacement[spot]] + " I wonder what it means?");
+        } else {
+            alert("You see a plant in the corner but nothing unusual.");
+        }
+        plantinspected = true;
+    } else {
+        alert("There is nothing left to see here.");
+    }
+    if (notePlacement[spot]) {
+            if (notePlacement[spot] === 'ComputerQuestion') {
+                CompQfound = true;
+                const el = document.getElementById("CompNote"); if (el) el.style.visibility = "visible";
+            } else if (notePlacement[spot] === 'ComboLockQuestion') {
+                ComboQfound = true;
+                const el = document.getElementById("ComboNote"); if (el) el.style.visibility = "visible";
+            } else if (notePlacement[spot] === 'GreenComboLockQuestion') {
+                GreenComboQfound = true;
+                const el = document.getElementById("GreenComboNote"); if (el) el.style.visibility = "visible";
+            } else if (notePlacement[spot] === 'BlueComboLockQuestion') {
+                BlueComboQfound = true;
+                const el = document.getElementById("BlueComboNote"); if (el) el.style.visibility = "visible";
+            } else if (notePlacement[spot] === 'JailQuestion') {
+                JailQfound = true;
+                const el = document.getElementById("JailNote"); if (el) el.style.visibility = "visible";
+            }
+    }
+    NotesList();
+}
+
+//Randomization NotePlacement functions Ai/google help -->
+var notePlacement = {}; // maps spot -> question variable name
+var noteTexts = {
+    'ComputerQuestion': ComputerQuestion,
+    'ComboLockQuestion': ComboLockQuestion,
+    'GreenComboLockQuestion': GreenComboLockQuestion,
+    'BlueComboLockQuestion': BlueComboLockQuestion,
+    'JailQuestion': JailQuestion
+};
+
+function placeNotesRandomizer() {
+    // available spots
+    const spots = ['Carpet','Plant','Hole','Paintings','LockBox','SecretRoom'];
+    // clear any previous placement
+    Object.keys(notePlacement).forEach(k => delete notePlacement[k]);
+
+    // questions and constrained allowed spots
+    const questionToAllowed = {
+        'ComputerQuestion': ['Carpet','Plant','Paintings'],
+        'JailQuestion': ['SecretRoom','Hole','Carpet','Plant','Paintings'],
+        'ComboLockQuestion': spots.slice(),
+        'GreenComboLockQuestion': spots.slice(),
+        'BlueComboLockQuestion': spots.slice()
+    };
+
+    
+    // chooses spot based on order of constraints and pick a random allowed spot that's still available
+    const questionsOrder = ['ComputerQuestion','JailQuestion','ComboLockQuestion','GreenComboLockQuestion','BlueComboLockQuestion'];
+    const availableSpots = spots.slice();
+    for (const q of questionsOrder) {
+        const allowed = (questionToAllowed[q] || spots.slice()).filter(s => availableSpots.includes(s));
+        let pick;
+        if (allowed.length > 0) {
+            pick = allowed[getRandomInt(0, allowed.length - 1)];
+        } else if (availableSpots.length > 0) {
+            pick = availableSpots[getRandomInt(0, availableSpots.length - 1)];
+        } else {
+            pick = spots[getRandomInt(0, spots.length - 1)];
+        }
+        notePlacement[pick] = q;
+        // remove pick from availableSpots for unique placements
+        const idx = availableSpots.indexOf(pick);
+        if (idx !== -1) availableSpots.splice(idx,1);
+    }
+
+}
+//<-- Randomization NotePlacement functions Ai/google help
+function inspectHole() { //if holle  is visible and note is placed there it updates the table and user
+    if (!holevisible) {
+        alert("The hole is not accessible yet.");
+        return;
+    }
+    if (holeInspected) {
+        alert("There's nothing new in the hole.");
+        return;
+    }
+    if (notePlacement['Hole']) {
+        alert("You look into the hole and find a note that says " + noteTexts[notePlacement['Hole']] + " I wonder what it means?");
+    } else {
+        alert("You look into the hole but find nothing.");
+    }
+    holeInspected = true;
+    if (notePlacement['Hole']) {
+        const found = notePlacement['Hole'];
+        if (found === 'ComputerQuestion') {
+            CompQfound = true;
+        } else if (found === 'ComboLockQuestion') {
+            ComboQfound = true;
+        } else if (found === 'GreenComboLockQuestion') {
+            GreenComboQfound = true;
+        } else if (found === 'BlueComboLockQuestion') {
+            BlueComboQfound = true;
+        } else if (found === 'JailQuestion') {
+            JailQfound = true;
+        }
+    }
+    NotesList();
+}
+
+
+
+function NotesList() { //ensures if the note is found it is displayed on the table
+if (CompQfound == true) {
+    document.getElementById("CompNote").style.visibility = "visible";
+}
+if (ComboQfound == true) {
+    document.getElementById("ComboNote").style.visibility = "visible";
+}
+if (GreenComboQfound == true) {
+    document.getElementById("GreenComboNote").style.visibility = "visible";
+}
+if (BlueComboQfound == true) {
+    document.getElementById("BlueComboNote").style.visibility = "visible";
+}
+if (JailQfound == true) {
+    document.getElementById("JailNote").style.visibility = "visible";
+}
+}
+
+</script>
+
+
+</body>
+</html>
